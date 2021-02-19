@@ -21,7 +21,7 @@ fi
 ###############################################################################
 # Install XRDP
 #
-apt install -y xrdp
+apt install -y xrdp xserver-xorg-core xorgxrdp
 
 ###############################################################################
 # Configure XRDP
