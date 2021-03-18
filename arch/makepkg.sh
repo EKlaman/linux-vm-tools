@@ -31,6 +31,7 @@ pushd "$TMPDIR" || exit
 # XORGXRDP
 # Devel version, because release version includes a bug crashing gnome-settings-daemon
 (
+	gpg --keyserver keys.gnupg.net --recv-keys 03993B4065E7193B
 	git clone https://aur.archlinux.org/xorgxrdp.git
 	cd xorgxrdp || exit
 	makepkg -sri --noconfirm
