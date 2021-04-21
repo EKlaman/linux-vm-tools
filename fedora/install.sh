@@ -34,6 +34,9 @@ fi
 systemctl enable xrdp
 systemctl enable xrdp-sesman
 
+systemctl stop xrdp
+systemctl stop xrdp-sesman
+
 # Configure the installed XRDP ini files.
 # use vsock transport.
 sed -i_orig -e 's/port=3389/port=vsock:\/\/-1:3389/g' /etc/xrdp/xrdp.ini
@@ -81,6 +84,10 @@ checkmodule -M -m -o allow-vsock.mod allow-vsock.te
 semodule_package -o allow-vsock.pp -m allow-vsock.mod
 # Install the selinux module!
 semodule -i allow-vsock.pp
+
+# reconfigure the service
+systemctl daemon-reload
+systemctl start xrdp
 
 ###############################################################################
 
