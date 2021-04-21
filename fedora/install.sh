@@ -15,11 +15,11 @@ fi
 if ! rpm -q xrdp 2>&1 > /dev/null ; then
     if type "dnf" > /dev/null 2>&1; then
         echo 'Refreshing repo cache and Installing missing xrdp package using DNF'
-        dnf -y install xrdp tigervnc-server
+        dnf --refresh install -y xrdp tigervnc-server
     else
         if type "yum" > /dev/null 2>&1; then
             echo 'Refreshing repo cache and Installing missing xrdp package using YUM'
-            dnf -y install xrdp tigervnc-server
+            dnf --refresh install -y xrdp tigervnc-server
         else
             echo 'xrdp not installed. Run dnf install xrdp first to install xrdp.' >&2
             exit 1
