@@ -13,8 +13,21 @@ fi
 
 # Use rpm -q to check for exact package name
 if ! rpm -q xrdp 2>&1 > /dev/null ; then
-    echo 'xrdp not installed. Run dnf install xrdp first to install xrdp.' >&2
-    exit 1
+    if type "dnf" > /dev/null 2>&1; then
+        echo 'Refreshing repo cache and Installing missing xrdp package using DNF'
+        dnf -y upgrade
+        dnf --refresh install -y xrdp tigervnc-server
+    else
+        if type "yum" > /dev/null 2>&1; then
+            echo 'Refreshing repo cache and Installing missing xrdp package using YUM'
+            yum -y upgrade
+            dnf --refresh install -y xrdp tigervnc-server
+        else
+            echo 'error:xrdp could not installed.' >&2
+            exit 1
+        fi
+    fi
+
 fi
 
 ###############################################################################
@@ -22,6 +35,9 @@ fi
 #
 systemctl enable xrdp
 systemctl enable xrdp-sesman
+
+systemctl stop xrdp
+systemctl stop xrdp-sesman
 
 # Configure the installed XRDP ini files.
 # use vsock transport.
@@ -70,6 +86,10 @@ checkmodule -M -m -o allow-vsock.mod allow-vsock.te
 semodule_package -o allow-vsock.pp -m allow-vsock.mod
 # Install the selinux module!
 semodule -i allow-vsock.pp
+
+# reconfigure the service
+systemctl daemon-reload
+systemctl start xrdp
 
 ###############################################################################
 
